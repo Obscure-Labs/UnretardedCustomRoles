@@ -21,7 +21,6 @@ namespace UncomplicatedCustomRoles.Commands
         public override void LoadGeneratedCommands() 
         {
             RegisteredCommands.Add(new UCRList());
-            RegisteredCommands.Add(new UCROwner());
             RegisteredCommands.Add(new UCRRole());
             RegisteredCommands.Add(new UCRSpawn());
             RegisteredCommands.Add(new UCRReload());

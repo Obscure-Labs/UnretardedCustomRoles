@@ -47,8 +47,6 @@ namespace UncomplicatedCustomRoles
 
         internal bool DoSpawnBasicRoles = false;
 
-        internal static HttpManager HttpManager = new("ucr");
-
         internal static FileConfigs FileConfigs;
 
         public override void OnEnabled()
@@ -68,13 +66,6 @@ namespace UncomplicatedCustomRoles
             PlayerHandler.UsedItem += Handler.OnItemUsed;
             PlayerHandler.Hurting += Handler.OnHurting;
             Scp049Handler.StartingRecall += Handler.OnScp049StartReviving;
-            
-            RespawnTimerCompatibility.Enable();
-            
-            if (!File.Exists(Path.Combine(ConfigPath, "UncomplicatedCustomRoles", ".nohttp")))
-            {
-                HttpManager.Start();
-            }
 
             if (Config.EnableBasicLogs)
             {
@@ -83,11 +74,6 @@ namespace UncomplicatedCustomRoles
                 LogManager.Info("        by FoxWorn3365 & Dr.Agenda");
                 LogManager.Info("===========================================");
                 LogManager.Info(">> Join our discord: https://discord.gg/5StRGu8EJV <<");
-            }
-
-            if (!HttpManager.IsLatestVersion(out Version latest))
-            {
-                LogManager.Warn($"You are NOT using the latest version of UncomplicatedCustomRoles!\nCurrent: v{Version} | Latest available: v{latest}\nDownload it from GitHub: https://github.com/FoxWorn3365/UncomplicatedCustomRoles/releases/latest");
             }
 
             FileConfigs.Welcome();
@@ -102,8 +88,6 @@ namespace UncomplicatedCustomRoles
         {
             Instance = null;
 
-            RespawnTimerCompatibility.Disable();
-
             ServerHandler.RespawningTeam -= Handler.OnRespawningWave;
             ServerHandler.RoundStarted -= Handler.OnRoundStarted;
             PlayerHandler.Died -= Handler.OnDied;
@@ -113,8 +97,6 @@ namespace UncomplicatedCustomRoles
             PlayerHandler.UsedItem -= Handler.OnItemUsed;
             PlayerHandler.Hurting -= Handler.OnHurting;
             Scp049Handler.StartingRecall -= Handler.OnScp049StartReviving;
-
-            HttpManager.Stop();
 
             Handler = null;
             CustomRoles = null;
