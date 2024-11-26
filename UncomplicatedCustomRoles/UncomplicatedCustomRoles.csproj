@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UncomplicatedCustomRoles</RootNamespace>
     <AssemblyName>UncomplicatedCustomRoles</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <LangVersion>9</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -87,6 +87,9 @@
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\..\Documents\GitKraken\SpireSCP\refs\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="ObscureLabs">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\ObscureLabs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine">

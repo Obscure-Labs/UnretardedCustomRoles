@@ -12,6 +12,7 @@ using Exiled.Events.EventArgs.Scp049;
 using Exiled.API.Enums;
 using UnityEngine;
 using UncomplicatedCustomRoles.Extensions;
+using ObscureLabs.API.Features;
 
 namespace UncomplicatedCustomRoles.Events
 {
@@ -21,6 +22,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnRoundStarted()
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             Plugin.PlayerRegistry = new();
             Plugin.RolesCount = new();
             foreach (KeyValuePair<int, ICustomRole> Data in Plugin.CustomRoles)
@@ -45,6 +47,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnPlayerSpawned(SpawnedEventArgs Spawned)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             SpawnManager.LimitedClearCustomTypes(Spawned.Player);
             if (!Plugin.Instance.DoSpawnBasicRoles)
             {
@@ -83,6 +86,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnScp049StartReviving(StartingRecallEventArgs Recall)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             if (Plugin.CustomRoles.Where(cr => cr.Value.CanReplaceRoles.Contains(RoleTypeId.Scp0492)).Count() > 0) {
                 Plugin.RoleSpawnQueue.Add(Recall.Target.Id);
             }
@@ -90,16 +94,19 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnDied(DiedEventArgs Died)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             SpawnManager.ClearCustomTypes(Died.Player);
         }
 
         public void OnSpawning(SpawningEventArgs Spawning)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             SpawnManager.ClearCustomTypes(Spawning.Player);
         }
 
         public void OnHurting(HurtingEventArgs Hurting)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             if (Plugin.PlayerRegistry.ContainsKey(Hurting.Player.Id))
             {
                 ICustomRole Role = Plugin.CustomRoles[Plugin.PlayerRegistry[Hurting.Player.Id]];
@@ -109,6 +116,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnEscaping(EscapingEventArgs Escaping)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             LogManager.Debug($"Player {Escaping.Player.Nickname} triggered the escaping event as {Escaping.Player.Role.Name}");
 
             if (Plugin.PlayerRegistry.ContainsKey(Escaping.Player.Id))
@@ -147,6 +155,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnRespawningWave(RespawningTeamEventArgs Respawn)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             foreach (Player Player in Respawn.Players)
             {
                 Plugin.RoleSpawnQueue.Add(Player.Id);
@@ -155,6 +164,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public void OnItemUsed(UsedItemEventArgs UsedItem)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             if (UsedItem.Player is not null && UsedItem.Player.HasCustomRole() && Plugin.PermanentEffectStatus.ContainsKey(UsedItem.Player.Id) && UsedItem.Item.Type == ItemType.SCP500)
             {
                 foreach (IUCREffect Effect in Plugin.PermanentEffectStatus[UsedItem.Player.Id])
@@ -170,6 +180,7 @@ namespace UncomplicatedCustomRoles.Events
 
         public IEnumerator<float> DoSetInfiniteEffectToPlayers()
         {
+            if (ExternalGamemode.CheckGamemode()) yield break;
             while (Round.InProgress)
             {
                 foreach (Player Player in Player.List.Where(player => Plugin.PermanentEffectStatus.ContainsKey(player.Id) && player.IsAlive && Plugin.PlayerRegistry.ContainsKey(player.Id)))
@@ -191,12 +202,14 @@ namespace UncomplicatedCustomRoles.Events
 
         public static IEnumerator<float> DoSpawnPlayer(Player Player, int Id, bool DoBypassRoleOverwrite = true)
         {
+            if (ExternalGamemode.CheckGamemode()) yield break;
             yield return Timing.WaitForSeconds(0.1f);
             SpawnManager.SummonCustomSubclass(Player, Id, DoBypassRoleOverwrite);
         }
 
         public static void DoEvaluateSpawnForPlayer(Player Player)
         {
+            if (ExternalGamemode.CheckGamemode()) return;
             Dictionary<RoleTypeId, List<ICustomRole>> RolePercentage = new()
             {
                 { RoleTypeId.ClassD, new() },
